@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class DetailyActivity extends AppCompatActivity {
@@ -106,4 +107,45 @@ public class DetailyActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void save(View view){
+
+        String friendName=etName.getText().toString();
+        String friendPhoneNumber=etPhoneNumber.getText().toString();
+        Bitmap smallImage=makeSmallerImage(selectedImage,300);
+
+
+        //Compress -> Veriyi çevirme işlemimize yarıyor. Resmi veritabanına kaydederken veriye çevirmemiz gerekli.
+        //OuputStream -> Byte verisi, veriye çevirmek için kullanacağımız sınıf
+        //Görseli almak ve veriye çevirmek;
+        ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+        smallImage.compress(Bitmap.CompressFormat.PNG,50,outputStream);
+        byte[] byteArray=outputStream.toByteArray();
+
+
+
+    }
+
+    private Bitmap makeSmallerImage(Bitmap image, int maxsize) {
+
+        int width= image.getWidth();
+        int height=image.getHeight();
+
+        float bitmapRatio=(float)height/(float) height;
+
+        if(bitmapRatio>1){// resim yatay
+            width=maxsize;
+            height=(int)(width/bitmapRatio);
+        }else{//resim dikey
+            height=maxsize;
+            width=(int)(height*bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image,width,height,true);
+
+
+
+    }
+
+
 }

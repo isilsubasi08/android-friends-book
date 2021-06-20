@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
@@ -121,6 +123,32 @@ public class DetailyActivity extends AppCompatActivity {
         ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
         smallImage.compress(Bitmap.CompressFormat.PNG,50,outputStream);
         byte[] byteArray=outputStream.toByteArray();
+
+
+        try{
+
+            SQLiteDatabase database=this.openOrCreateDatabase("Friends",MODE_PRIVATE,null);
+            database.execSQL("CREATE TABLE IF NOT EXISTS friends (id INTEGER PRIMARY KEY,friendName VARCHAR,friendPhoneNumber VARCHAR,image BLOB)");
+
+            String sqlString="INSERT INTO friends(friendName,friendPhoneNumber,image) VALUES (?,?,?)";
+            SQLiteStatement sqLiteStatement=database.compileStatement(sqlString);
+            sqLiteStatement.bindString(1,friendName);
+            sqLiteStatement.bindString(2,friendPhoneNumber);
+            sqLiteStatement.bindBlob(3,byteArray);
+            sqLiteStatement.execute();
+
+
+
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+        finish();//Bulunduğu aktiviteyi kapatıyor.
 
 
 
